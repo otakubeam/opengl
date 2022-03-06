@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 
 #include <fstream>
+#include <iostream>
 
 namespace detail {
 

@@ -1,13 +1,11 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-#include <GL/glew.h>
+#include "shader_loader.hpp"
 
 #include <GLFW/glfw3.h>
 GLFWwindow* window;
 
-#include <glm/glm.hpp>
-using namespace glm;
 
 float data_buf[] = {
   0.5f, 0.5f, 0.0f,
@@ -23,7 +21,6 @@ uint32_t index_array[] = {
   0, 1, 2,
   2, 3, 4,
 };
-
 
 
 int main( void )
@@ -97,31 +94,10 @@ int main( void )
 
 
 
+  auto yellow = Shader("shaders/id.vrtx", "shaders/yellow.frag");
+  auto red = Shader("shaders/id.vrtx", "shaders/red.frag");
 
 
-  uint32_t id = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(id, 1, &vertex_shader, NULL);
-  glCompileShader(id);
-
-  uint32_t id2 = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(id2, 1, &fragment_shader, NULL);
-  glCompileShader(id2);
-
-  uint32_t id3 = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(id3, 1, &fragment_shader2, NULL);
-  glCompileShader(id3);
-
-
-
-
-
-
-
-
-  uint32_t prog_id2 = glCreateProgram();
-  glAttachShader(prog_id2, id);
-  glAttachShader(prog_id2, id3);
-  glLinkProgram(prog_id2);
 
 
 
@@ -131,13 +107,14 @@ int main( void )
 
 
 
-    glUseProgram(prog_id);
+    red.UseProgram();
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
         NULL, 0);
 
-    glUseProgram(prog_id2);
+    yellow.UseProgram();
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
-        NULL, 3);
+        NULL, 2);
+
 
 
     // Swap buffers
