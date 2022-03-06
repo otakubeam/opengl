@@ -46,7 +46,7 @@ char const* fragment_shader2 =
 "out vec3 color;\n"
 "void main()\n"
 "{\n"
-"  color = vec3(1.0, 1.0, 0.0);\n"
+"  color = vec3(1.0, 0.0, 0.0);\n"
 "}\n";
 
 int main( void )
@@ -145,8 +145,6 @@ int main( void )
   glLinkProgram(prog_id);
 
 
-
-
   uint32_t prog_id2 = glCreateProgram();
   glAttachShader(prog_id2, id);
   glAttachShader(prog_id2, id3);
@@ -163,14 +161,11 @@ int main( void )
     glUseProgram(prog_id);
 
     {
-      glBindVertexArray(vao);
-
       glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
           NULL, 2);
       glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
           NULL, 0);
 
-      glBindVertexArray(0);
     }
 
 
