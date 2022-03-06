@@ -158,15 +158,14 @@ int main( void )
 
 
 
+
     glUseProgram(prog_id);
+    glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
+        NULL, 2);
 
-    {
-      glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
-          NULL, 2);
-      glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
-          NULL, 0);
-
-    }
+    glUseProgram(prog_id2);
+    glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
+        NULL, 0);
 
 
     // Swap buffers
