@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <linux/input.h>
 #include <stdlib.h>
 
 #include <GL/glew.h>
@@ -25,29 +24,7 @@ uint32_t index_array[] = {
   2, 3, 4,
 };
 
-char const* vertex_shader =
-"#version 330 core\n"
-"layout (location=0) in vec3 position;\n"
-"void main()\n"
-"{\n"
-"  gl_Position = vec4(position.xyz, 1.0);\n"
-"}\n";
 
-char const* fragment_shader =
-"#version 330 core\n"
-"out vec3 color;\n"
-"void main()\n"
-"{\n"
-"  color = vec3(1.0, 1.0, 0.0);\n"
-"}\n";
-
-char const* fragment_shader2 =
-"#version 330 core\n"
-"out vec3 color;\n"
-"void main()\n"
-"{\n"
-"  color = vec3(1.0, 0.0, 0.0);\n"
-"}\n";
 
 int main( void )
 {
@@ -139,10 +116,6 @@ int main( void )
 
 
 
-  uint32_t prog_id = glCreateProgram();
-  glAttachShader(prog_id, id);
-  glAttachShader(prog_id, id2);
-  glLinkProgram(prog_id);
 
 
   uint32_t prog_id2 = glCreateProgram();
@@ -158,14 +131,13 @@ int main( void )
 
 
 
-
     glUseProgram(prog_id);
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
-        NULL, 2);
+        NULL, 0);
 
     glUseProgram(prog_id2);
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
-        NULL, 0);
+        NULL, 3);
 
 
     // Swap buffers
