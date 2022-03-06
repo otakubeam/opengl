@@ -21,8 +21,8 @@ float data_buf[] = {
 };
 
 uint32_t index_array[] = {
-	1, 2, 3,
-	3, 4, 5,
+	0, 1, 2,
+	2, 3, 4,
 };
 
 char const* vertex_shader =
