@@ -11,13 +11,13 @@ GLFWwindow* window;
 using namespace glm;
 
 float data_buf[] = {
-  0.5f, 0.5f, 0.f, 
+  0.5f, 0.5f, .2f, 
   1.f, 0.f, 0.f, 
 
-  0.5f, -0.5f, 0.f,
+  0.5f, -0.5f, .3f,
   1.f, 1.f, 0.f, 
 
-  0.f, 0.f, -1.2f,
+  0.f, 0.f, 0.9f,
   0.f, 0.f, 1.f, 
 
   -0.5f, 0.5f, 0.f,
@@ -40,7 +40,7 @@ char const* vertex_shader =
 "void main()\n"
 "{\n"
 "  gl_Position = vec4(position.xyz, 1.0);\n"
-"  in_color = color;\n"
+"  in_color = vec3(position.x / 2 + 0.5, position.y / 2 + 0.5, position.z);\n"
 "}\n";
 
 char const* fragment_shader =
