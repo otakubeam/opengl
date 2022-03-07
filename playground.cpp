@@ -11,13 +11,20 @@ GLFWwindow* window;
 using namespace glm;
 
 float data_buf[] = {
-  0.5f, 0.5f, 0.0f,
-  0.5f, -0.5f, 0.0f,
+  0.5f, 0.5f, 0.f, 
+  1.f, 0.f, 0.f, 
 
-  0.0f, 0.0f, -1.2f,
+  0.5f, -0.5f, 0.f,
+  1.f, 1.f, 0.f, 
 
-  -0.5f, 0.5f, 0.0f,
-  -0.5f, -0.5f, 0.0f,
+  0.f, 0.f, -1.2f,
+  0.f, 0.f, 1.f, 
+
+  -0.5f, 0.5f, 0.f,
+  1.f, 0.f, 0.f, 
+
+  -0.5f, -0.5f, 0.f,
+  1.f, 0.f, 0.f, 
 };
 
 uint32_t index_array[] = {
@@ -28,17 +35,22 @@ uint32_t index_array[] = {
 char const* vertex_shader =
 "#version 330 core\n"
 "layout (location=0) in vec3 position;\n"
+"layout (location=1) in vec3 color;\n"
+"out vec3 in_color;\n"
 "void main()\n"
 "{\n"
 "  gl_Position = vec4(position.xyz, 1.0);\n"
+"  in_color = color;\n"
 "}\n";
 
 char const* fragment_shader =
 "#version 330 core\n"
 "out vec3 color;\n"
+"in vec3 in_color;\n"
+"uniform vec3 our_color;\n"
 "void main()\n"
 "{\n"
-"  color = vec3(1.0, 1.0, 0.0);\n"
+"  color = in_color;\n"
 "}\n";
 
 char const* fragment_shader2 =
@@ -72,7 +84,7 @@ int main( void )
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
   // Dark blue background
-  glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+  glClearColor(0.f, 0.f, 0.4f, 0.f);
 
 
 
@@ -113,8 +125,11 @@ int main( void )
 
 
   // Set vao to point into buffer
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, NULL);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, NULL);
   glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(12));
+  glEnableVertexAttribArray(1);
 
 
 
@@ -152,14 +167,20 @@ int main( void )
 
 
 
+  int vertexColorLocation = glGetUniformLocation(prog_id, "our_color");
+
 
   do {
     glClear(GL_COLOR_BUFFER_BIT);
 
-
-
-
     glUseProgram(prog_id);
+
+    // update shader uniform
+    double  timeValue = glfwGetTime();
+    float greenValue = static_cast<float>(sin(timeValue) / 4.0 + 0.5);
+    glUniform3f(vertexColorLocation, 1.f - greenValue, greenValue, 0.f);
+
+
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
         NULL, 2);
 
