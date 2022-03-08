@@ -12,19 +12,19 @@ using namespace glm;
 
 float data_buf[] = {
   0.5f, 0.5f, .2f, 
-  1.f, 0.f, 0.f, 
+  1.f, 0.f, 0.f,  0.f,
 
   0.5f, -0.5f, .3f,
-  1.f, 1.f, 0.f, 
+  1.f, 1.f, 0.f,  0.f,
 
   0.f, 0.f, 0.9f,
-  0.f, 0.f, 1.f, 
+  0.f, 0.f, 1.f,  2.f,
 
   -0.5f, 0.5f, 0.f,
-  1.f, 0.f, 0.f, 
+  1.f, 0.f, 0.f,  0.f,
 
   -0.5f, -0.5f, 0.f,
-  1.f, 0.f, 0.f, 
+  1.f, 0.f, 0.f,  0.f,
 };
 
 uint32_t index_array[] = {
@@ -36,21 +36,29 @@ char const* vertex_shader =
 "#version 330 core\n"
 "layout (location=0) in vec3 position;\n"
 "layout (location=1) in vec3 color;\n"
+"layout (location=2) in float flag;\n"
 "out vec3 in_color;\n"
+"out float in_flag;\n"
+"uniform float offset;\n"
 "void main()\n"
 "{\n"
-"  gl_Position = vec4(position.xyz, 1.0);\n"
-"  in_color = vec3(position.x / 2 + 0.5, position.y / 2 + 0.5, position.z);\n"
+"  gl_Position = vec4(offset / 2 + position.x, position.yz, 1.0);\n"
+"  in_color = vec3(offset / 2 + position.x / 2 + 0.5, position.y / 2 + 0.5, position.z);\n"
+"  in_flag = flag;\n"
 "}\n";
 
 char const* fragment_shader =
 "#version 330 core\n"
 "out vec3 color;\n"
 "in vec3 in_color;\n"
+"in float in_flag;\n"
 "uniform vec3 our_color;\n"
 "void main()\n"
 "{\n"
-"  color = in_color;\n"
+"  if (in_flag > 1.0)\n"
+"    color = our_color;\n"
+"  else \n"
+"    color = in_color;\n"
 "}\n";
 
 char const* fragment_shader2 =
@@ -106,7 +114,7 @@ int main( void )
   // This sets global gl_array_buffer to this vbo
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   // Buffer data for static drawing (reading many times)
-  glBufferData(GL_ARRAY_BUFFER, sizeof (data_buf), data_buf, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(data_buf), data_buf, GL_STATIC_DRAW);
 
 
 
@@ -125,12 +133,14 @@ int main( void )
 
 
   // Set vao to point into buffer
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, NULL);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 7, NULL);
   glEnableVertexAttribArray(0);
 
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(12));
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 7, (void*)(12));
   glEnableVertexAttribArray(1);
 
+  glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(float) * 7, (void*)(24));
+  glEnableVertexAttribArray(2);
 
 
 
@@ -168,6 +178,9 @@ int main( void )
 
 
   int vertexColorLocation = glGetUniformLocation(prog_id, "our_color");
+  int offset_loc = glGetUniformLocation(prog_id, "offset");
+  int offset_loc2 = glGetUniformLocation(prog_id2, "offset");
+
 
 
   do {
@@ -176,15 +189,17 @@ int main( void )
     glUseProgram(prog_id);
 
     // update shader uniform
-    double  timeValue = glfwGetTime();
+    double timeValue = glfwGetTime();
     float greenValue = static_cast<float>(sin(timeValue) / 4.0 + 0.5);
     glUniform3f(vertexColorLocation, 1.f - greenValue, greenValue, 0.f);
+    glUniform1f(offset_loc, greenValue);
 
 
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
         NULL, 2);
 
     glUseProgram(prog_id2);
+    glUniform1f(offset_loc2, 2 - greenValue * 2);
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
         NULL, 0);
 
