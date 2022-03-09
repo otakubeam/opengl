@@ -20,11 +20,11 @@ float data_buf[] = {
 
   0.5f, -0.5f, .3f,
   1.f, 1.f, 0.f,  0.f,
-  1.f, 1.f,
+  2.f, 2.f,
 
   0.f, 0.f, 0.9f,
   0.f, 0.f, 1.f,  2.f,
-  1.f, 0.f,
+  2.f, 0.f,
 
   -0.5f, 0.5f, 0.f,
   1.f, 0.f, 0.f,  0.f,
@@ -130,10 +130,12 @@ int main( void )
   unsigned char *data = stbi_load("container.jpg", &width, &height,
       &nrChannels, 0);
 
-
   unsigned int texture = 0;
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
+
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
