@@ -20,11 +20,11 @@ float data_buf[] = {
 
   0.5f, -0.5f, .3f,
   1.f, 1.f, 0.f,  0.f,
-  2.f, 2.f,
+  0.05f, 0.05f,
 
   0.f, 0.f, 0.9f,
   0.f, 0.f, 1.f,  2.f,
-  2.f, 0.f,
+  .05f, 0.f,
 
   -0.5f, 0.5f, 0.f,
   1.f, 0.f, 0.f,  0.f,
@@ -135,8 +135,6 @@ int main( void )
   glBindTexture(GL_TEXTURE_2D, texture);
 
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
 
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
       GL_UNSIGNED_BYTE, data);
@@ -145,6 +143,14 @@ int main( void )
 
   stbi_image_free(data);
   
+
+
+
+
+
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 
 
