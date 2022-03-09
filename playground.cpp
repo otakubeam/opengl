@@ -73,7 +73,7 @@ char const* fragment_shader2 =
 
 "void main()\n"
 "{\n"
-"  color = mix(texture(sampler, in_tex_coord), texture(sampler2, in_tex_coord), 0.2);\n"
+"  color = mix(texture(sampler, in_tex_coord), texture(sampler2, vec2(-in_tex_coord.x, in_tex_coord.y)), 0.2);\n"
 "}\n";
 
 char const* fragment_shader =
