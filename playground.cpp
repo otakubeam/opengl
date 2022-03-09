@@ -56,7 +56,7 @@ char const* vertex_shader =
 
 "void main()\n"
 "{\n"
-"  gl_Position = vec4(offset / 2 + position.x, position.yz, 1.0);\n"
+"  gl_Position = vec4(offset / 2 + position.x,  offset * offset + position.y, position.z, 1.0);\n"
 "  in_color = vec3(offset / 2 + position.x / 2 + 0.5, position.y / 2 + 0.5, position.z);\n"
 "  in_flag = flag;\n"
 "  in_tex_coord = tex_coord;\n"
@@ -69,10 +69,11 @@ char const* fragment_shader2 =
 "in vec2 in_tex_coord;\n"
 
 "uniform sampler2D sampler;\n"
+"uniform sampler2D sampler2;\n"
 
 "void main()\n"
 "{\n"
-"  color = texture(sampler, in_tex_coord);\n"
+"  color = mix(texture(sampler, in_tex_coord), texture(sampler2, in_tex_coord), 0.2);\n"
 "}\n";
 
 char const* fragment_shader =
@@ -130,10 +131,6 @@ int main( void )
       &nrChannels, 0);
 
 
-
-
-
-
   unsigned int texture = 0;
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
@@ -144,11 +141,45 @@ int main( void )
   glGenerateMipmap(GL_TEXTURE_2D);
 
 
+  stbi_image_free(data);
+  
 
 
+
+
+
+
+
+
+  data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
+
+
+  unsigned int texture2 = 0;
+  glGenTextures(1, &texture2);
+  glBindTexture(GL_TEXTURE_2D, texture2);
+
+
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA,
+      GL_UNSIGNED_BYTE, data);
+  glGenerateMipmap(GL_TEXTURE_2D);
 
 
   stbi_image_free(data);
+
+
+
+
+
+
+
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, texture);
+
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, texture2);
+
+
 
 
 
@@ -252,6 +283,11 @@ int main( void )
 
 
 
+  int sampler_loc = glGetUniformLocation(prog_id2, "sampler");
+  int sampler2_loc = glGetUniformLocation(prog_id2, "sampler2");
+
+
+
 
 
   do {
@@ -270,8 +306,6 @@ int main( void )
 
 
 
-    glBindTexture(GL_TEXTURE_2D, texture);
-
 
 
 
@@ -285,6 +319,15 @@ int main( void )
 
 
     glUseProgram(prog_id2);
+
+
+
+
+    glUniform1i(sampler_loc, 0);
+    glUniform1i(sampler2_loc, 1);
+
+
+
 
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
         NULL, 0);
