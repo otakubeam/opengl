@@ -276,7 +276,7 @@ int main( void )
 
 
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
-        NULL, 0);
+        NULL, 2);
 
 
 
@@ -286,10 +286,8 @@ int main( void )
 
     glUseProgram(prog_id2);
 
-    glBindTexture(GL_TEXTURE_2D, texture);
-
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
-        NULL, 2);
+        NULL, 0);
 
 
 
