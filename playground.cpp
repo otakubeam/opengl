@@ -76,6 +76,10 @@ int main( void )
   glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
 
+  // Enable transparency
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
 
   GLuint vao = 0;
