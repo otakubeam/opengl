@@ -14,7 +14,8 @@ float data_buf[] = {
   0.5f, 0.5f, 0.0f,
   0.5f, -0.5f, 0.0f,
 
-  0.0f, 0.0f, -1.2f,
+  -0.2f, 0.0f, 0.f,
+  0.2f, 0.0f, 0.f,
 
   -0.5f, 0.5f, 0.0f,
   -0.5f, -0.5f, 0.0f,
@@ -22,7 +23,7 @@ float data_buf[] = {
 
 uint32_t index_array[] = {
   0, 1, 2,
-  2, 3, 4,
+  5, 3, 4,
 };
 
 char const* vertex_shader =
@@ -35,18 +36,18 @@ char const* vertex_shader =
 
 char const* fragment_shader =
 "#version 330 core\n"
-"out vec3 color;\n"
+"out vec4 color;\n"
 "void main()\n"
 "{\n"
-"  color = vec3(1.0, 1.0, 0.0);\n"
+"  color = vec4(1.0, 1.0, 0.0, 0.5);\n"
 "}\n";
 
 char const* fragment_shader2 =
 "#version 330 core\n"
-"out vec3 color;\n"
+"out vec4 color;\n"
 "void main()\n"
 "{\n"
-"  color = vec3(1.0, 0.0, 0.0);\n"
+"  color = vec4(1.0, 0.0, 0.0, 0.5);\n"
 "}\n";
 
 int main( void )
@@ -161,7 +162,7 @@ int main( void )
 
     glUseProgram(prog_id);
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
-        NULL, 2);
+        NULL, 3);
 
     glUseProgram(prog_id2);
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
