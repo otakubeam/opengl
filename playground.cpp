@@ -10,6 +10,9 @@ GLFWwindow* window;
 #include <glm/glm.hpp>
 using namespace glm;
 
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp> // after <glm/glm.hpp>
+
 float data_buf[] = {
   0.5f, 0.5f, 0.0f,
   0.5f, -0.5f, 0.0f,
@@ -29,9 +32,10 @@ uint32_t index_array[] = {
 char const* vertex_shader =
 "#version 330 core\n"
 "layout (location=0) in vec3 position;\n"
+"uniform mat4 MVP;\n"
 "void main()\n"
 "{\n"
-"  gl_Position = vec4(position.xyz, 1.0);\n"
+"  gl_Position = MVP * vec4(position.xyz, 1.0);\n"
 "}\n";
 
 char const* fragment_shader =
@@ -106,11 +110,17 @@ int main( void )
 
 
 
+
+
+
   // Buffer indexes : do i need this?
   uint32_t ebo = 0;
   glGenBuffers(1, &ebo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index_array), index_array, GL_STATIC_DRAW);
+
+
+
 
 
 
@@ -158,17 +168,83 @@ int main( void )
 
 
 
+
+
+
+
+  // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+  glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1024.f / 768.f, 0.1f, 100.0f);
+
+  // Or, for an ortho camera :
+  //glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
+
+  // Camera matrix
+  glm::mat4 View = glm::lookAt(
+      glm::vec3(2,3,3), // Camera is at (4,3,3), in World Space
+      glm::vec3(0,0,0), // and looks at the origin
+      glm::vec3(0,+1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+  );
+
+  // Model matrix : an identity matrix (model will be at the origin)
+  glm::mat4 Model = glm::mat4(1.0f);
+  // Our ModelViewProjection : multiplication of our 3 matrices
+  glm::mat4 mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
+
+
+
+
+
+
+
+
+
+  // Get a handle for our "MVP" uniform
+  // Only during the initialisation
+  GLuint MatrixID = glGetUniformLocation(prog_id, "MVP");
+
+
+  MatrixID = glGetUniformLocation(prog_id2, "MVP");
+
+
+
+
+
   do {
     glClear(GL_COLOR_BUFFER_BIT);
+
+
+    double timeValue = glfwGetTime();
+    float greenValue = static_cast<float>(sin(timeValue)) ;
+    float redValue = static_cast<float>(cos(timeValue)) ;
+
+
+
+
+
+    // Camera matrix
+    glm::mat4 View = glm::lookAt(
+        glm::vec3(1.5, greenValue * 1.2 + redValue, greenValue * redValue), // Camera is at (4,3,3), in World Space
+        glm::vec3(0,0,0), // and looks at the origin
+        glm::vec3(0,+1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+    );
+
+    // Our ModelViewProjection : multiplication of our 3 matrices
+    glm::mat4 mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
+
 
 
 
 
     glUseProgram(prog_id);
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
         NULL, 3);
 
+
+
+
     glUseProgram(prog_id2);
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
     glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
         NULL, 0);
 
