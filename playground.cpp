@@ -15,33 +15,41 @@ using namespace glm;
 
 float data_buf[] = {
   0.0f, 0.0f, 0.0f,
+  1, 0, 0,
   0.0f, 0.5f, 0.0f,
+  1, 1, 0,
   0.5f, 0.0f, 0.0f,
+  1, 1, 1,
   0.0f, 0.0f, 0.5f,
+  0, 1, 1,
 };
 
 uint32_t index_array[] = {
-  0, 1, 2,
-  0, 1, 3,
-  0, 2, 3,
   1, 2, 3,
+  0, 1, 3,
+  0, 1, 2,
+  0, 2, 3,
 };
 
 char const* vertex_shader =
 "#version 330 core\n"
 "layout (location=0) in vec3 position;\n"
+"layout (location=1) in vec3 color_in;\n"
 "uniform mat4 MVP;\n"
+"out vec3 color_in_pass;\n"
 "void main()\n"
 "{\n"
-"  gl_Position = vec4(position.xyz, 1.0);\n"
+"  gl_Position = MVP * vec4(position.xyz, 1.0);\n"
+"  color_in_pass = color_in;\n"
 "}\n";
 
 char const* fragment_shader =
 "#version 330 core\n"
+"in vec3 color_in_pass;\n"
 "out vec4 color;\n"
 "void main()\n"
 "{\n"
-"  color = vec4(1.0, 1.0, 0.0, 0.5);\n"
+"  color = vec4(color_in_pass.xyz, 0.9);\n"
 "}\n";
 
 char const* fragment_shader2 =
@@ -122,8 +130,11 @@ int main( void )
 
 
   // Set vao to point into buffer
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, NULL);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, NULL);
   glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, NULL);
+  glEnableVertexAttribArray(1);
 
 
 
@@ -200,11 +211,14 @@ int main( void )
   MatrixID = glGetUniformLocation(prog_id2, "MVP");
 
 
-
+  // Enable depth test
+  glEnable(GL_DEPTH_TEST);
+  // Accept fragment if it closer to the camera than the former one
+  glDepthFunc(GL_LESS);
 
 
   do {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 
@@ -230,10 +244,11 @@ int main( void )
 
 
 
-    glUseProgram(prog_id2);
-    // glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
-    glDrawElementsBaseVertex(GL_TRIANGLES, 1, GL_UNSIGNED_INT,
+    glUseProgram(prog_id);
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+    glDrawElementsBaseVertex(GL_TRIANGLES, 12, GL_UNSIGNED_INT,
         NULL, 0);
+
 
 
 
@@ -242,8 +257,8 @@ int main( void )
 
     glUseProgram(prog_id);
     // glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
-    glDrawElementsBaseVertex(GL_TRIANGLES, 1, GL_UNSIGNED_INT,
-        NULL, 1);
+    glDrawElementsBaseVertex(GL_TRIANGLES, 6, GL_UNSIGNED_INT,
+        NULL, 3);
 
 
 
