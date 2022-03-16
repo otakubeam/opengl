@@ -14,19 +14,17 @@ using namespace glm;
 #include <glm/gtx/transform.hpp> // after <glm/glm.hpp>
 
 float data_buf[] = {
-  0.5f, 0.5f, 0.0f,
-  0.5f, -0.5f, 0.0f,
-
-  -0.2f, 0.0f, 0.f,
-  0.2f, 0.0f, 0.f,
-
-  -0.5f, 0.5f, 0.0f,
-  -0.5f, -0.5f, 0.0f,
+  0.0f, 0.0f, 0.0f,
+  0.0f, 0.5f, 0.0f,
+  0.5f, 0.0f, 0.0f,
+  0.0f, 0.0f, 0.5f,
 };
 
 uint32_t index_array[] = {
   0, 1, 2,
-  5, 3, 4,
+  0, 1, 3,
+  0, 2, 3,
+  1, 2, 3,
 };
 
 char const* vertex_shader =
@@ -35,7 +33,7 @@ char const* vertex_shader =
 "uniform mat4 MVP;\n"
 "void main()\n"
 "{\n"
-"  gl_Position = MVP * vec4(position.xyz, 1.0);\n"
+"  gl_Position = vec4(position.xyz, 1.0);\n"
 "}\n";
 
 char const* fragment_shader =
@@ -80,10 +78,6 @@ int main( void )
   glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
 
-  // Enable transparency
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 
 
   GLuint vao = 0;
@@ -103,7 +97,7 @@ int main( void )
   // This sets global gl_array_buffer to this vbo
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   // Buffer data for static drawing (reading many times)
-  glBufferData(GL_ARRAY_BUFFER, sizeof (data_buf), data_buf, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(data_buf), data_buf, GL_STATIC_DRAW);
 
 
 
@@ -213,6 +207,8 @@ int main( void )
     glClear(GL_COLOR_BUFFER_BIT);
 
 
+
+
     double timeValue = glfwGetTime();
     float greenValue = static_cast<float>(sin(timeValue)) ;
     float redValue = static_cast<float>(cos(timeValue)) ;
@@ -234,19 +230,22 @@ int main( void )
 
 
 
+    glUseProgram(prog_id2);
+    // glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+    glDrawElementsBaseVertex(GL_TRIANGLES, 1, GL_UNSIGNED_INT,
+        NULL, 0);
+
+
+
+
+
 
     glUseProgram(prog_id);
-    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
-    glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
-        NULL, 3);
+    // glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+    glDrawElementsBaseVertex(GL_TRIANGLES, 1, GL_UNSIGNED_INT,
+        NULL, 1);
 
 
-
-
-    glUseProgram(prog_id2);
-    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
-    glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
-        NULL, 0);
 
 
     // Swap buffers
