@@ -108,7 +108,7 @@ int main( void )
 
 
     red.UseProgram();
-    glDrawElementsBaseVertex(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
+    glDrawElementsBaseVertex(GL_TRIANGLES, 6, GL_UNSIGNED_INT,
         NULL, 0);
 
     yellow.UseProgram();

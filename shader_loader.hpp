@@ -74,7 +74,7 @@ class Shader {
   public:
     Shader(const char* vertex_shader, const char* fragment_shader) {
       detail::ShaderLoader loader(vertex_shader, fragment_shader);
-      int program_id_ = loader.GetHandle();
+      program_id_ = loader.GetHandle();
     }
 
     void UseProgram() {
