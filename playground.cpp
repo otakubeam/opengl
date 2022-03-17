@@ -14,27 +14,34 @@ using namespace glm;
 #include <glm/gtx/transform.hpp> // after <glm/glm.hpp>
 
 float data_buf[] = {
-  -0.500406, -0.286516, 0.286516,
-  -0.500406, 0.286516, 0.286516,
-  -0.500406, -0.286516, -0.286516,
-  -0.500406, 0.286516, -0.286516,
-  0.500406, -0.286516, 0.286516,
-  0.500406, 0.286516, 0.286516,
-  0.500406, -0.286516, -0.286516,
-  0.500406, 0.286516, -0.286516,
+ 1.220000, 0.000000, 0.000000,
+ 1.161421, 0.141421, 0.000000,
+ 1.020000, 0.200000, 0.000000,
+ 0.878579, 0.141421, 0.000000,
+ 0.820000, 0.000000, 0.000000,
+ 0.878579, -0.141421, 0.000000,
+ 1.020000, -0.200000, 0.000000,
+ 1.161421, -0.141421, 0.000000,
+ -0.610000, 0.000000, -1.056551,
+ -0.580710, 0.141421, -1.005821,
+ -0.510000, 0.200000, -0.883346,
+ -0.439289, 0.141421, -0.760871,
+ -0.410000, 0.000000, -0.710141,
+ -0.439289, -0.141421, -0.760871,
+ -0.510000, -0.200000, -0.883346,
+ -0.580710, -0.141421, -1.005821,
+ -0.610000, 0.000000, 1.056551,
+ -0.580710, 0.141421, 1.005821,
+ -0.510000, 0.200000, 0.883346,
+ -0.439289, 0.141421, 0.760871,
+ -0.410000, 0.000000, 0.710141,
+ -0.439289, -0.141421, 0.760871,
+ -0.510000, -0.200000, 0.883346,
+ -0.580710, -0.141421, 1.005821,
 };
 
 // One color for each vertex. They were generated randomly.
 static const GLfloat g_color_buffer_data[] = {
-    0.583f,  0.771f,  0.014f,
-    0.609f,  0.115f,  0.436f,
-    0.327f,  0.483f,  0.844f,
-    0.822f,  0.569f,  0.201f,
-    0.435f,  0.602f,  0.223f,
-    0.310f,  0.747f,  0.185f,
-    0.597f,  0.770f,  0.761f,
-    0.559f,  0.436f,  0.730f,
-    0.359f,  0.583f,  0.152f,
     0.483f,  0.596f,  0.789f,
     0.559f,  0.861f,  0.639f,
     0.195f,  0.548f,  0.859f,
@@ -61,28 +68,85 @@ static const GLfloat g_color_buffer_data[] = {
     0.393f,  0.621f,  0.362f,
     0.673f,  0.211f,  0.457f,
     0.820f,  0.883f,  0.371f,
-    0.982f,  0.099f,  0.879f
+    0.483f,  0.596f,  0.789f,
+    0.559f,  0.861f,  0.639f,
+    0.195f,  0.548f,  0.859f,
+    0.014f,  0.184f,  0.576f,
+    0.771f,  0.328f,  0.970f,
+    0.406f,  0.615f,  0.116f,
+    0.676f,  0.977f,  0.133f,
+    0.971f,  0.572f,  0.833f,
+    0.140f,  0.616f,  0.489f,
+    0.997f,  0.513f,  0.064f,
+    0.945f,  0.719f,  0.592f,
+    0.543f,  0.021f,  0.978f,
+    0.279f,  0.317f,  0.505f,
+    0.167f,  0.620f,  0.077f,
+    0.347f,  0.857f,  0.137f,
+    0.055f,  0.953f,  0.042f,
+    0.714f,  0.505f,  0.345f,
+    0.783f,  0.290f,  0.734f,
+    0.722f,  0.645f,  0.174f,
 };
 
 uint32_t index_array[] = {
-  0, 4, 6,
-  3, 2, 6,
-  7, 6, 4,
-  5, 1, 3,
-  1, 0, 2,
-  5, 4, 0,
+  0, 8,  1,
+  1, 9,  2,
+  2, 10,  3,
+  3, 11,  4,
+  4, 12,  5,
+  5, 13,  6,
+  6, 14,  7,
+  7, 15,  0,
+  8, 16,  9,
+  9, 17,  10,
+  10, 18,  11,
+  11, 19,  12,
+  12, 20,  13,
+  13, 21,  14,
+  14, 22,  15,
+  15, 23,  8,
+  16, 0,  17,
+  17, 1,  18,
+  18, 2,  19,
+  19, 3,  20,
+  20, 4,  21,
+  21, 5,  22,
+  22, 6,  23,
+  23, 7,  16,
 
-  6, 2, 4,
-  6, 7, 2,
-  4, 5, 6,
-  3, 7, 1,
-  2, 3, 0,
-  0, 1, 4,
+
+  8, 9, 1,
+  9, 10, 2,
+  10, 11, 3,
+  11, 12, 4,
+  12, 13, 5,
+  13, 14, 6,
+  14, 15, 7,
+  15, 8, 0,
+  16, 17, 9,
+   17, 18, 10,
+   18, 19, 11,
+   19, 20, 12,
+   20, 21, 13,
+   21, 22, 14,
+   22, 23, 15,
+   23, 16, 8,
+   0, 1, 17,
+   1, 2, 18,
+   2, 3, 19,
+   3, 4, 20,
+   4, 5, 21,
+   5, 6, 22,
+   6, 7, 23,
+   7, 0, 16,
 };
 
 char const* vertex_shader =
 "#version 330 core\n"
 "layout (location=0) in vec3 position;\n"
+"layout(location = 1) in vec3 vertexColor;\n"
+"out vec3 fragmentColor;\n"
 //"layout (location=1) in vec3 color_in;\n"
 //"out vec3 color_in_pass;\n"
 "uniform mat4 MVP;\n"
@@ -90,15 +154,17 @@ char const* vertex_shader =
 "{\n"
 //"  color_in_pass = color_in;\n"
 "  gl_Position = MVP * vec4(position.xyz, 1.0);\n"
+"  fragmentColor = vertexColor;\n"
 "}\n";
 
 char const* fragment_shader =
 "#version 330 core\n"
 //"in vec3 color_in_pass;\n"
-"out vec4 color;\n"
+"in vec3 fragmentColor;\n"
+"out vec3 color;\n"
 "void main()\n"
 "{\n"
-"  color = vec4(1, 0, 0, 0.9);\n"
+"  color = fragmentColor;\n"
 "}\n";
 
 char const* fragment_shader2 =
@@ -174,15 +240,29 @@ int main( void )
 
 
 
-
-
-
-
   // Set vao to point into buffer
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, NULL);
   glEnableVertexAttribArray(0);
 
 
+
+
+  GLuint colorbuffer;
+  glGenBuffers(1, &colorbuffer);
+  glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+
+
+  glEnableVertexAttribArray(1);
+  glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+  glVertexAttribPointer(
+      1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+      3,                                // size
+      GL_FLOAT,                         // type
+      GL_FALSE,                         // normalized?
+      0,                                // stride
+      (void*)0                          // array buffer offset
+  );
 
 
 
@@ -260,7 +340,7 @@ int main( void )
   // Accept fragment if it closer to the camera than the former one
   glDepthFunc(GL_LESS);
 
-  glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+  // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
   do {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -278,7 +358,7 @@ int main( void )
 
     // Camera matrix
     glm::mat4 View = glm::lookAt(
-        glm::vec3(greenValue, 2, redValue), // Camera is at (4,3,3), in World Space
+        glm::vec3(5* greenValue, 1, 5*redValue), // Camera is at (4,3,3), in World Space
         glm::vec3(0,0,0), // and looks at the origin
         glm::vec3(0,+1,0)  // Head is up (set to 0,-1,0 to look upside-down)
     );
@@ -291,7 +371,7 @@ int main( void )
 
     glUseProgram(prog_id);
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
-    glDrawElementsBaseVertex(GL_TRIANGLES, 100, GL_UNSIGNED_INT,
+    glDrawElementsBaseVertex(GL_TRIANGLES, 200, GL_UNSIGNED_INT,
         NULL, 0);
 
 
